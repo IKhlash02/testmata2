@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Testmata</string>
+    <string name="definition_keratitis">Keratitis adalah peradangan atau inflamasi pada bagian kornea mata (Pearce EC, 2000).</string>
+    <string name="keratitis_take">Untuk memulai tes keratitis, silakan melakukan pengambilan gambar melalui galeri atau kamera</string>
+    <string name="capture">Capture</string>
+    <string name="back">Back</string>
+    <string name="camera">CAMERA</string>
+    <string name="gallery">GALLERY</string>
+    <string name="kepercayaan">KEPERCAYAAN</string>
+    <string name="diagnosis">DIAGNOSIS</string>
+</resources>
