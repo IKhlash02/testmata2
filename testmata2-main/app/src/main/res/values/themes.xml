@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Testmata" parent="Theme.Material3.DayNight">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/primary_light</item>
+        <item name="colorOnPrimary">@color/text_light</item>
+        <item name="colorPrimaryVariant">@color/subtext_light</item>
+        <item name="colorSecondary">@color/button_light</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowMenuButtonStyle</item>
+
+    </style>
+
+    <style name="OverflowMenuButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@android:color/white</item>
+    </style>
+
+    <style name="Theme.Testmata" parent="Base.Theme.Testmata" />
+</resources>

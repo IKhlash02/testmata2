@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="70dp"
+    android:background="?attr/colorPrimary"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:layout_width="102dp"
+        android:layout_height="102dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/logo_tesmata" />
+
+</LinearLayout>

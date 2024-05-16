@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Base.Theme.Testmata" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/text_dark</item>
+        <item name="colorSecondary">@color/button_dark</item>
+        <item name="colorPrimaryVariant">@color/subtext_dark</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowMenuButtonStyle</item>
+
+    </style>
+    <style name="OverflowMenuButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@android:color/white</item>
+
+    </style>
+</resources>
