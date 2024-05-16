@@ -14,6 +14,7 @@
        app:layout_constraintTop_toTopOf="parent"
        app:layout_constraintStart_toStartOf="parent"
        app:layout_constraintEnd_toEndOf="parent"
+       app:strokeColor="?attr/colorPrimary"
        >
 
        <LinearLayout
@@ -26,12 +27,13 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:text="@string/definition_keratitis"
+               android:textColor="?attr/colorOnPrimary"
                />
            <TextView
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:layout_marginTop="8dp"
-               android:textColor="@color/gray"
+               android:textColor="?attr/colorPrimaryVariant"
                android:text="@string/keratitis_take"
                />
 
@@ -72,6 +74,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cardKeratitis"
         android:layout_margin="16dp"
+        app:strokeColor="?attr/colorPrimary"
         android:visibility="gone">
 
         <ImageView
@@ -85,7 +88,6 @@
 >
 
 
-
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardResult"
         android:layout_width="match_parent"
@@ -94,6 +96,7 @@
         app:layout_constraintTop_toBottomOf="@id/cardImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:strokeColor="?attr/colorPrimary"
         android:visibility="gone"
         >
 
@@ -113,6 +116,7 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textSize="14sp"
+                    android:textColor="?attr/colorOnPrimary"
                     android:text="@string/diagnosis" />
 
                 <TextView
@@ -121,6 +125,7 @@
                     android:textStyle="bold"
                     android:gravity="end"
                     android:textSize="14sp"
+                    android:textColor="?attr/colorOnPrimary"
                     android:text="@string/kepercayaan" />
 
             </LinearLayout>
@@ -137,6 +142,7 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textSize="20sp"
+                    android:textColor="?attr/colorOnPrimary"
                     android:text="@string/diagnosis" />
 
                 <TextView
@@ -146,6 +152,7 @@
                     android:textStyle="bold"
                     android:gravity="end"
                     android:textSize="20sp"
+                    android:textColor="?attr/colorOnPrimary"
                     android:text="@string/kepercayaan" />
 
             </LinearLayout>

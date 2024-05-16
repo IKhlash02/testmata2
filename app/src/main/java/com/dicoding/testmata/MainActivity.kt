@@ -5,9 +5,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
@@ -51,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setActionBar()
         if(!allPermissionGranted()){
             requestPermissionLauncher.launch(REQUIRED_PERMISSION)
         }
@@ -58,6 +62,54 @@ class MainActivity : AppCompatActivity() {
         binding.btnGallery.setOnClickListener { startGallery() }
         binding.btnCamera.setOnClickListener { startCameraX() }
 
+    }
+
+    fun setActionBar(isDarkMode: Boolean = false){
+        supportActionBar?.setCustomView(R.layout.app_bar)
+        supportActionBar?.setDisplayShowCustomEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        val color = if (isDarkMode) {
+            R.color.primary_dark // warna untuk dark mode
+        } else {
+            R.color.primary_light // warna untuk light mode
+        }
+
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(getColor(color)))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_about -> {
+                // Intent to open a web page
+                val openURL = Intent(Intent.ACTION_VIEW)
+                openURL.data = Uri.parse("https://www.tesmata.com/tentang-kami/")
+                startActivity(openURL)
+                true
+            }
+
+            R.id.action_privacy -> {
+                // Intent to open a web page
+                val openURL = Intent(Intent.ACTION_VIEW)
+                openURL.data = Uri.parse("https://www.tesmata.com/kebijakan-privasi/")
+                startActivity(openURL)
+                true
+            }
+
+            R.id.action_term -> {
+                // Intent to open a web page
+                val openURL = Intent(Intent.ACTION_VIEW)
+                openURL.data = Uri.parse("https://www.tesmata.com/syarat-ketentuan/")
+                startActivity(openURL)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun startCameraX() {
@@ -88,9 +140,6 @@ class MainActivity : AppCompatActivity() {
             Log.d("Photo Picker", "no Media Selected")
         }
     }
-
-
-
 
     private fun showImage() {
         currentImageUri?.let {
@@ -144,6 +193,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
-        private const val TAG = "mainActivity"
+        private const val TAG = "MainActivity"
     }
 }

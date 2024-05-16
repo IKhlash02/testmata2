@@ -20,7 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="@string/capture"
-        style="@style/Widget.Material3.Button.TonalButton"
+        android:textColor="@color/white"
+        style="@style/Base.Theme.Testmata"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewFinder"/>
@@ -32,6 +33,7 @@
         android:layout_margin="16dp"
         android:text="@string/back"
         style="@style/Widget.Material3.Button.OutlinedButton"
+        app:strokeColor="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnCapture"/>

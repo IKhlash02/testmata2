@@ -11,8 +11,11 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
+import android.graphics.drawable.ColorDrawable
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
+import android.content.res.Configuration
 import com.dicoding.testmata.databinding.ActivityCameraBinding
 
 class CameraActivity : AppCompatActivity() {
@@ -52,8 +55,25 @@ class CameraActivity : AppCompatActivity() {
         binding = ActivityCameraBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Check if dark mode is enabled
+        val isDarkMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+
+        // Set the app bar color based on the mode
+        val appBarColor = if (isDarkMode) {
+            ContextCompat.getColor(this, R.color.primary_dark) // warna untuk dark mode
+        } else {
+            ContextCompat.getColor(this, R.color.primary_light) // warna untuk light mode
+        }
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(appBarColor))
+
+        // Ensure the action bar title text color is white
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.setTitle(HtmlCompat.fromHtml("<font color=\"#FFFFFF\">Camera</font>", HtmlCompat.FROM_HTML_MODE_LEGACY))
+
         binding.btnCapture.setOnClickListener { takePhoto() }
-        binding.btnBack.setOnClickListener{onBackPressedDispatcher}
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
     }
 
     override fun onResume() {
