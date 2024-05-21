@@ -187,10 +187,10 @@ class CameraActivity : AppCompatActivity() {
             detector.process(inputImage)
                 .addOnSuccessListener { faces ->
                     if (faces.isNotEmpty()) {
-                            runOnUiThread { binding.btnCapture.isEnabled = true }
+                        runOnUiThread { binding.btnCapture.isEnabled = true }
 
                     } else {
-                            runOnUiThread { binding.btnCapture.isEnabled = false }
+                        runOnUiThread { binding.btnCapture.isEnabled = false }
                     }
                     Log.d(TAG, "Detected faces: $faces")
                 }
