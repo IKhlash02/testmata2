@@ -3,8 +3,7 @@ package com.dicoding.testmata
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -20,11 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.dicoding.testmata.CameraActivity.Companion.CAMERAX_RESULT
 import com.dicoding.testmata.databinding.ActivityMainBinding
-import com.dicoding.testmata.ml.KeratitisMetadata
-import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.vision.classifier.Classifications
-import java.io.InputStream
-import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun setActionBar(isDarkMode: Boolean = false){
+    private fun setActionBar(isDarkMode: Boolean = false){
         supportActionBar?.setCustomView(R.layout.app_bar)
         supportActionBar?.setDisplayShowCustomEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -170,22 +165,6 @@ class MainActivity : AppCompatActivity() {
             imageClassifierHelper.classifyImage(it)
         }
     }
-
-    private fun imageAnalyze(bitmap: Bitmap) {
-        Log.d(TAG, "analisis gais")
-
-        val model = KeratitisMetadata.newInstance(this)
-
-        val image = TensorImage.fromBitmap(bitmap)
-
-        val outputs = model.process(image)
-        val probability = outputs.probabilityAsCategoryList
-
-        Log.d(TAG, probability.toString())
-
-        model.close()
-    }
-
 
     private fun showMessage(message: String){
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()

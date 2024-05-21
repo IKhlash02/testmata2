@@ -1,22 +1,31 @@
 package com.dicoding.testmata
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.Configuration
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.OrientationEventListener
 import android.view.Surface
 import android.widget.Toast
+import androidx.annotation.OptIn
+import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ExperimentalGetImage
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
-import android.graphics.drawable.ColorDrawable
+import androidx.camera.core.resolutionselector.AspectRatioStrategy
+import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
-import android.content.res.Configuration
 import com.dicoding.testmata.databinding.ActivityCameraBinding
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.face.FaceDetection
+import java.util.concurrent.Executors
 
 class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
@@ -56,7 +65,8 @@ class CameraActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Check if dark mode is enabled
-        val isDarkMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        val isDarkMode =
+            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
         // Set the app bar color based on the mode
         val appBarColor = if (isDarkMode) {
@@ -68,12 +78,17 @@ class CameraActivity : AppCompatActivity() {
 
         // Ensure the action bar title text color is white
         supportActionBar?.setDisplayShowTitleEnabled(true)
-        supportActionBar?.setTitle(HtmlCompat.fromHtml("<font color=\"#FFFFFF\">Camera</font>", HtmlCompat.FROM_HTML_MODE_LEGACY))
+        supportActionBar?.title =
+            HtmlCompat.fromHtml(
+                "<font color=\"#FFFFFF\">Camera</font>",
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
 
         binding.btnCapture.setOnClickListener { takePhoto() }
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
+        binding.btnCapture.isEnabled = false
+//        binding.btnBack.setOnClickListener {
+//            finish()
+//        }
     }
 
     override fun onResume() {
@@ -85,6 +100,21 @@ class CameraActivity : AppCompatActivity() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
+            val resolutionSelector = ResolutionSelector.Builder()
+                .setAspectRatioStrategy(AspectRatioStrategy.RATIO_16_9_FALLBACK_AUTO_STRATEGY)
+                .build()
+            val imageAnalyzer = ImageAnalysis.Builder()
+                .setResolutionSelector(resolutionSelector)
+                .setTargetRotation(binding.viewFinder.display.rotation)
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_YUV_420_888)
+                .build()
+
+            imageAnalyzer.setAnalyzer(Executors.newSingleThreadExecutor()) { image ->
+                faceDetection(image)
+            }
+
+
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder()
                 .build()
@@ -100,9 +130,10 @@ class CameraActivity : AppCompatActivity() {
                     this,
                     cameraSelector,
                     preview,
-                    imageCapture
+                    imageCapture,
+                    imageAnalyzer
                 )
-            } catch (exc: Exception){
+            } catch (exc: Exception) {
                 Toast.makeText(
                     this@CameraActivity,
                     "Gagal memunculkan kamera.",
@@ -112,11 +143,11 @@ class CameraActivity : AppCompatActivity() {
 
 
             }
-        }, ContextCompat.getMainExecutor(this ))
+        }, ContextCompat.getMainExecutor(this))
     }
 
     private fun takePhoto() {
-        val imageCapture = imageCapture?: return
+        val imageCapture = imageCapture ?: return
 
         val photoFile = createCustomTempFile(application)
 
@@ -139,11 +170,40 @@ class CameraActivity : AppCompatActivity() {
                         "Gagal mengambil gambar.",
                         Toast.LENGTH_SHORT
                     ).show()
-                    Log.e(TAG, "onError: ${exception    .message}")
+                    Log.e(TAG, "onError: ${exception.message}")
                 }
 
             }
         )
+    }
+
+    @OptIn(ExperimentalGetImage::class)
+    private fun faceDetection(image: ImageProxy) {
+        val mediaImage = image.image
+        if (mediaImage != null) {
+            val inputImage = InputImage.fromMediaImage(mediaImage, image.imageInfo.rotationDegrees)
+            val detector = FaceDetection.getClient()
+
+            detector.process(inputImage)
+                .addOnSuccessListener { faces ->
+                    if (faces.isNotEmpty()) {
+                            runOnUiThread { binding.btnCapture.isEnabled = true }
+
+                    } else {
+                            runOnUiThread { binding.btnCapture.isEnabled = false }
+                    }
+                    Log.d(TAG, "Detected faces: $faces")
+                }
+                .addOnFailureListener { e ->
+                    runOnUiThread { binding.btnCapture.isEnabled = false }
+                    Log.e(TAG, "Face detection failed: $e")
+                }
+                .addOnCompleteListener {
+                    image.close()
+                }
+        } else {
+            image.close()
+        }
     }
 
     companion object {
