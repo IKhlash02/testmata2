@@ -3,8 +3,7 @@ package com.dicoding.testmata
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -20,11 +19,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.dicoding.testmata.CameraActivity.Companion.CAMERAX_RESULT
 import com.dicoding.testmata.databinding.ActivityMainBinding
-import com.dicoding.testmata.ml.KeratitisMetadata
-import org.tensorflow.lite.support.image.TensorImage
+import com.yalantis.ucrop.UCrop
 import org.tensorflow.lite.task.vision.classifier.Classifications
-import java.io.InputStream
-import java.text.NumberFormat
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun setActionBar(isDarkMode: Boolean = false){
+    private fun setActionBar(isDarkMode: Boolean = false){
         supportActionBar?.setCustomView(R.layout.app_bar)
         supportActionBar?.setDisplayShowCustomEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -119,10 +116,15 @@ class MainActivity : AppCompatActivity() {
 
     private val launcherIntentCameraX = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ) {
+    ) { it ->
         if (it.resultCode == CAMERAX_RESULT){
-            currentImageUri = it.data?.getStringExtra(CameraActivity.EXTRA_CAMERAX_IMAGE)?.toUri()
-            showImage()
+            val resultImage  = it.data?.getStringExtra(CameraActivity.EXTRA_CAMERAX_IMAGE)?.toUri()
+            resultImage?.let {
+                startCrop(it)
+            }
+
+//           currentImageUri = it.data?.getStringExtra(CameraActivity.EXTRA_CAMERAX_IMAGE)?.toUri()
+//            showImage()
         }
     }
 
@@ -134,8 +136,7 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.PickVisualMedia()
     )   {uri: Uri? ->
         if(uri != null){
-            currentImageUri = uri
-            showImage()
+          startCrop(uri)
         } else {
             Log.d("Photo Picker", "no Media Selected")
         }
@@ -171,24 +172,33 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun imageAnalyze(bitmap: Bitmap) {
-        Log.d(TAG, "analisis gais")
-
-        val model = KeratitisMetadata.newInstance(this)
-
-        val image = TensorImage.fromBitmap(bitmap)
-
-        val outputs = model.process(image)
-        val probability = outputs.probabilityAsCategoryList
-
-        Log.d(TAG, probability.toString())
-
-        model.close()
-    }
-
-
     private fun showMessage(message: String){
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun startCrop(sourceUri: Uri) {
+        val destinationUri = Uri.fromFile(File(cacheDir, "IMG_${System.currentTimeMillis()}"))
+        val option = UCrop.Options()
+        option.setCompressionQuality(80)
+
+        UCrop.of(sourceUri, destinationUri)
+            .withOptions(option)
+            .start(this)
+
+//
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK && data != null) {
+            val resultUri = UCrop.getOutput(data)
+            currentImageUri = resultUri
+            showImage()
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            val cropError = UCrop.getError(data!!)
+            cropError?.printStackTrace()
+        }
     }
 
     companion object {

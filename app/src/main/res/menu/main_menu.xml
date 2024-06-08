@@ -2,27 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_more"
-        android:icon="@drawable/ic_more_vert_white_24dp"
-        android:title="@string/more"
-        app:showAsAction="ifRoom">
-        <menu>
-            <item
-                android:id="@+id/action_about"
-                android:title="Tentang"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/action_privacy"
-                android:title="Kebijakan Privasi"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/action_term"
-                android:title="Syarat dan Ketentuan"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/action_licence"
-                android:title="Lisensi Sumber Terbuka"
-                app:showAsAction="never" />
-        </menu>
-    </item>
+        android:id="@+id/action_about"
+        android:title="Tentang"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_privacy"
+        android:title="Kebijakan Privasi"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_term"
+        android:title="Syarat dan Ketentuan"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_licence"
+        android:title="Lisensi Sumber Terbuka"
+        app:showAsAction="never" />
 </menu>
