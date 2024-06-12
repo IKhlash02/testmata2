@@ -185,7 +185,6 @@ class MainActivity : AppCompatActivity() {
             .withOptions(option)
             .start(this)
 
-//
     }
 
     @Deprecated("Deprecated in Java")
