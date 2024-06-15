@@ -19,9 +19,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.dicoding.testmata.CameraActivity.Companion.CAMERAX_RESULT
 import com.dicoding.testmata.databinding.ActivityMainBinding
+import com.dicoding.testmata.helper.DateHelper
+import com.dicoding.testmata.helper.ImageClassifierHelper
 import com.yalantis.ucrop.UCrop
 import org.tensorflow.lite.task.vision.classifier.Classifications
 import java.io.File
+import kotlin.math.round
 
 class MainActivity : AppCompatActivity() {
 
@@ -143,9 +146,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showImage() {
-        currentImageUri?.let {
-            Log.d(TAG, "showImage: $it")
-            binding.previewImageView.setImageURI(it)
+        currentImageUri?.let {uri ->
+            Log.d(TAG, "showImage: $uri")
+            binding.previewImageView.setImageURI(uri)
             binding.cardImage.visibility = View.VISIBLE
             imageClassifierHelper = ImageClassifierHelper(
                 context = this,
@@ -157,19 +160,32 @@ class MainActivity : AppCompatActivity() {
                     override fun onResults(results: List<Classifications>?, infereceTime: Long) {
                         results?.let {
                             if (it.isNotEmpty() && it[0].categories.isNotEmpty()){
+                                val date = DateHelper.getCurrentDate()
                                 val result = it[0].categories[0]
                                 val diagnoisis = if (result.label == "Class_A_nonkeratitis") "Non Keratitis" else "Keratitis"
                                 binding.tvResult.text = diagnoisis
-                                binding.tvPercent.text = "${result.score}"
+                                binding.tvPercent.text = "${round(result.score).toInt()}%"
                                 binding.cardResult.visibility = View.VISIBLE
+
+                                moveToResult(diagnoisis, result.score, uri , date)
+
                             }
                         }
                     }
                 }
             )
 
-            imageClassifierHelper.classifyImage(it)
+            imageClassifierHelper.classifyImage(uri)
         }
+    }
+
+    private fun moveToResult(result: String, score:Float,  imageUri: Uri, date: String) {
+        val intent = Intent(this, ResultActivity::class.java)
+        intent.putExtra(EXTRA_IMAGE, imageUri.toString())
+        intent.putExtra(EXTRA_RESULT, result)
+        intent.putExtra(EXTRA_SCORE, score)
+        intent.putExtra(EXTRA_DATE, date)
+        startActivity(intent)
     }
 
     private fun showMessage(message: String){
@@ -203,5 +219,9 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
         private const val TAG = "MainActivity"
+        const val EXTRA_IMAGE = "extra_image"
+        const val EXTRA_RESULT = "extra_result"
+        const val EXTRA_DATE = "extra_date"
+        const val EXTRA_SCORE = "extra_score"
     }
 }

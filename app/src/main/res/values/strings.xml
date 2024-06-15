@@ -9,4 +9,13 @@
     <string name="kepercayaan">KEPERCAYAAN</string>
     <string name="diagnosis">DIAGNOSIS</string>
     <string name="more">More</string>
+    <string name="welcome_message">Halo, selamat datang!👋</string>
+    <string name="information_home">"Temukan solusi cepat dan akurat untuk mendeteksi keratitis neurotropik."</string>
+    <string name="result_1">Result</string>
+    <string name="result">Hasil Analisis</string>
+    <string name="keratitis_1">Hasil pemeriksaan menunjukkan adanya tanda-tanda keratitis. Kami sarankan Anda segera menghubungi dokter atau profesional kesehatan untuk konsultasi lebih lanjut dan mendapatkan penanganan yang tepat</string>
+    <string name="keratitis_2">Ingat, deteksi dini adalah langkah penting dalam penanganan. Jangan tunda untuk mencari pertolongan medis.</string>
+
+    <string name="non_keratitis_1">Selamat! Hasil pemeriksaan tidak menunjukkan adanya tanda-tanda keratitis. Tetap jaga kesehatan Anda dan lakukan pemeriksaan rutin untuk memastikan kondisi Anda tetap optimal.</string>
+    <string name="non_keratitis_2">Penting untuk tetap waspada dan menjaga pola hidup sehat agar kesehatan Anda tetap terjaga.</string>
 </resources>

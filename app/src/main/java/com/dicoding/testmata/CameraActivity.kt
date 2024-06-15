@@ -29,7 +29,7 @@ import java.util.concurrent.Executors
 
 class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
-    private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+    private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
     private var imageCapture: ImageCapture? = null
 
     private val orientationEventListener by lazy {
